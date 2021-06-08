@@ -2,7 +2,7 @@
 
 ####  1.1 Http工作原理
 
-> ![image-20210607150601257](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20210607150601257.png)
+> ![image-20210607150601257](images\image-20210607150601257.png)
 >
 > 在用户点击URL为http://www.qq.com/index.html的链接后，浏览器和web服务器执行以下动作：
 >
@@ -49,15 +49,15 @@ Nginx配置虚拟主机有如下三种方式：
 
 - 基于主机多IP方式
 
-  ![image-20210607172931855](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20210607172931855.png)
+  ![image-20210607172931855](images\image-20210607172931855.png)
 
 - 基于端口的配置方式
 
-  ![image-20210607172947527](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20210607172947527.png)
+  ![image-20210607172947527](images\image-20210607172947527.png)
 
 - 基于多个hosts名称方式（多域名方式）
 
-  ​		![image-20210607173010850](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20210607173010850.png)
+  ​			`		![image-20210607173010850](images\image-20210607173010850.png)
 
 ### 03 Nginx常用模块
 
