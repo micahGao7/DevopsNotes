@@ -1,3 +1,5 @@
+## Nginx
+
 ### 01 Nginx基础Http协议
 
 ####  1.1 Http工作原理
@@ -186,4 +188,180 @@ server {
 	}
 }
 ```
+
+#### 3.4 Nginx状态监控
+
+ngx_http_stub_status_module模块提供对基本状态信息的访问
+
+配置示例：
+
+```
+server {
+	listen 80;
+	server_name mirror.micah.com;
+	
+	location /nginx_status {
+		stub_status;
+	}
+}
+```
+
+状态信息含义：
+
+| 状态               | 含义                                  |
+| ------------------ | ------------------------------------- |
+| Active connections | 当前活跃连接数，包含waiting等待连接数 |
+| accepts            | 已接受的总TCP连接数量                 |
+| handled            | 已处理的TCP连接数量                   |
+| requests           | 当前总http请求数量                    |
+| Reading            | 当前读取的请求头数量                  |
+| Writing            | 当前响应的请求头数量                  |
+| Waiting            | 当前等待请求的空闲客户端连接数        |
+
+#### 3.5 Nginx Location
+
+##### 3.5.1 Location语法
+
+```
+location [ = | ~ | ~* |^~ ] uri { ... }
+location @name { ... }
+```
+
+| 匹配符 | 匹配规则                     | 优先级 |
+| ------ | ---------------------------- | ------ |
+| =      | 精确匹配                     | 1      |
+| ^~     | 以某个字符串开头             | 2      |
+| ~      | 区分大小写的正则匹配         | 3      |
+| ~*     | 不区分大小写的正则匹配       | 4      |
+| /      | 通用匹配，任何请求都会匹配到 | 5      |
+
+### 04 Nginx搭建流行架构
+
+#### 4.1 LNMP架构基本概述
+
+##### 4.1.1 LNMP实现过程
+
+![image-20210608191607848](images/image-20210608191607848.png)
+
+ #### 4.2 LNMP架构环境配置
+
+##### 4.2.1 图形展示fastcgi_index与fastcgi_param作用
+
+![image-20210608192010564](images/image-20210608192010564.png)
+
+##### 4.2.2 Nginx与PHP集成
+
+示例配置文件
+
+```
+server {
+	server_name	php.micah.com;
+	listen 80;
+	root /code;
+	index index.php index.html;
+	
+	location ~ \.php$ {
+		fastcgi_pass 127.0.0.1:9000;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		include	fastcgi_params;
+	}
+}
+```
+
+### 05 Nginx反向代理服务
+
+正向代理与反向代理区别：
+
+区别在于形式上服务的“对象”不一样，其次架设的位置点不一样
+
+正向代理代理的对象是客户端，为客户端服务
+
+反向代理代理的对象是服务端，为服务端服务
+
+#### 5.1 Nginx代理服务支持协议
+
+1、Nginx作为代理服务，支持的代理协议非常的多，具体如下图
+
+![image-20210608194019583](images/image-20210608194019583.png)
+
+2、通常情况下，我们将Nginx作为反向代理，常常用到如下几种协议：
+
+![image-20210608194107649](images/image-20210608194107649.png)
+
+#### 5.2 Nginx代理网站优化配置项
+
+```
+vim /etc/nginx/proxy_params
+proxy_http_version 1.1;
+proxyy_set_header Host $http_host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_connect_timeout  30;
+proxy_send_timeout 60;
+proxy_read_timeout 60;
+proxy_buffering on;
+proxy_buffer_size 64k;
+proxy_buffers 4 64k;
+
+location / {
+	proxy_pass http://127.0.0.1:8080;
+	include	proxy_params;
+}
+```
+
+### 06 Nginx七层负载均衡
+
+#### 6.1 Nginx负载均衡基本概述
+
+##### 6.1.1 负载均衡与代理区别
+
+* Nginx负载均衡与Nginx反向代理不同地方在于：
+  * Nginx代理仅代理一台服务器
+  * Nginx负载均衡则是将客户端请求通过proxy_pass代理至一组upstream资源池
+
+#### 6.2 Nginx负载均衡应用场景
+
+##### 6.2.1 四层与七层区别
+
+* 四层负载均衡：传输层
+  * 优点：性能高，数据包在底层就进行了转发
+  * 缺点：仅支持ip:port转发，无法完成复杂的业务逻辑应用
+* 七层负载均衡：应用层
+  * 优点：贴近业务，支持URI路径匹配、Header改写、Rewrite等
+  * 缺点：性能低，数据包需要拆解到顶层才进行转发
+
+#### 6.3 Nginx负载均衡配置场景
+
+* Nginx实现负载均衡需要两个模块：
+  * proxy_pass：代理模块
+  * upstream：虚拟资源池模块
+
+配置示例：
+
+```
+upstream backend {
+	server backend1.example.com weight=5;
+	server backend2.example.com:8080;
+	server unix:/tmp/backend3;
+	server backup1.example.com:8080	backup;
+}
+server {
+	location / {
+	proxy_pass http://backend;
+	}
+}
+```
+
+#### 6.4 Nginx负载均衡调度算法
+
+| 调度算法   | 概述                                                         |
+| ---------- | ------------------------------------------------------------ |
+| 轮询       | 按时间顺序逐一分配到不同的后端服务器（默认）                 |
+| weight     | 加权轮询，weight值越大，分配到的访问几率越高                 |
+| ip_hash    | 每个请求按访问IP的hash结果分配，这样来自同一IP的固定访问一个后端服务器 |
+| least_conn | 将请求传递到活动连接数最少的服务器                           |
+
+**backup标识备份状态**
+
+backup将服务器标记为备份服务器。当主服务器不可用时，将请求传递至备份服务器处理
 
