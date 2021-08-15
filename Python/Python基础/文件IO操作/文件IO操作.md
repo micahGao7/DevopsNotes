@@ -97,3 +97,60 @@ with open(filename, encoding="x") as f:
 
 #### os.path模块
 
+from os import path
+
+#### Path类
+
+**from pathlib import Path**
+
+#### 拼接
+
+**操作符/**
+
+* Path对象/Path对象
+* Path对象/字符串
+* 字符串/Path对象
+
+* joinpath(*other)：在当前Path路径上连接多个字符串返回新路径对象
+
+#### 分解
+
+parts属性，会返回目录各部分元祖
+
+.parts
+
+#### 父目录
+
+.parent
+
+#### 目录组成部分
+
+name、stem、suffix、suffixes、with_suffix(suffix)、with_name(name)
+
+* name：目录的最后一个部分
+
+* suffix：目录中最后一个部分的扩展名
+* stem：目录最后一个部分，没雨后缀
+* name = stem + suffix
+* suffixes：返回多个扩展名列表
+* with_suffix(suffix)：有扩展名则替换，无则补充扩展名
+* with_name(name)：替换目录最后一个部分并返回一个新的路径
+
+#### 全局方法
+
+home()：返回当前家目录
+
+cwd()：返回当前工作目录
+
+#### 判断方法
+
+* exists()：目录或者文件是否存在
+* is_dir()：是否是目录，目录存在返回True
+* is_file()：是否是普通文件，文件存在返回True
+* is_symlink()：是否是软连接
+* is_adsolute()：是否是绝对路径
+
+#### 绝对路径
+
+* resolve()：非windows，返回一个新的路径，这个新路径就是当前Path对象的绝对路径，如果是软连接则直接被解析
+* absolute()：获取绝对路径。如果是软连接，不会被解析
