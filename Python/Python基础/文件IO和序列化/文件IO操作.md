@@ -154,3 +154,39 @@ cwd()：返回当前工作目录
 
 * resolve()：非windows，返回一个新的路径，这个新路径就是当前Path对象的绝对路径，如果是软连接则直接被解析
 * absolute()：获取绝对路径。如果是软连接，不会被解析
+
+Path2：29:30
+路径对象.mkdir(parents=True, exist_ok=True)：创建文件夹及父目录，目录已存在不抛出异常
+文件对象.touch()：创建文件
+路径对象.iterdir()：遍历路径下的子目录，不递归
+
+#### 通配符 
+
+Path2：38:20
+
+* glob(pattern)：通配给定的模式，返回生成器对象
+
+* rglob(pattern)：通配给定的模式，递归目录，返回生成器对象
+* ?：代表一个字符
+* *：表示任意个字符
+* [a-z0-9]：表示一个字符
+
+### shutil模块
+
+**import shutil**
+
+shutil.rmtree(dst, True)
+
+```python
+import shutil
+from pathlib import Path
+src = Path()/'src'
+dst = Path()/'dst'
+def fn(src, names):
+    # return (filter(lambda name: name.endswith('.py'), names))
+    return {name for name in names if name.endswith('.py')}
+
+copytree(src, dst, ignore=fn, dirs_exist_ok=True)
+print(*Path(dst).rglob('*'), sep='\n')   
+```
+
