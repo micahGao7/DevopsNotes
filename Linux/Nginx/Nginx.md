@@ -1,8 +1,6 @@
-## Nginx
+# 1 Nginx基础Http协议
 
-### 01 Nginx基础Http协议
-
-####  1.1 Http工作原理
+##  1.1 Http工作原理
 
 > ![image-20210607150601257](images\image-20210607150601257.png)
 >
@@ -17,9 +15,9 @@
 > 7. 释放TCP链接
 > 8. 浏览器显示index.html中的内容                                                                                                             
 
-#### 1.2 Http请求Request
+## 1.2 Http请求Request
 
-##### 1.2.1 请求Method
+### 1.2.1 请求Method
 
 - 客户端向服务端发送请求时，会根据不同的资源发送不同的请求方法Method：
   - GET：用于获取URI对应的资源；（比如看朋友圈）
@@ -31,7 +29,7 @@
   - PUT是幂等的，POST是非幂等的；
   - 幂等：对于相同的输入，每次得到的结果都是相等的
 
-##### 1.2.2响应Status
+### 1.2.2响应Status
 
 http响应状态码Status-Code以3位数字组成，用来标识该请求是否成功，比如是正常还是错误等，HTTP/1.1中状态码可以分为五大类
 
@@ -43,9 +41,9 @@ http响应状态码Status-Code以3位数字组成，用来标识该请求是否�
 | 4xx    | 客户端错误，请求包含语法错误或无法完成请求     |
 | 5xx    | 服务器错误，服务器在处理请求的过程中发生了错误 |
 
-### 02 Nginx Web快速入门
+# 2 Nginx Web快速入门
 
-#### 2.1 Nginx虚拟主机
+## 2.1 Nginx虚拟主机
 
 Nginx配置虚拟主机有如下三种方式：
 
@@ -61,15 +59,15 @@ Nginx配置虚拟主机有如下三种方式：
 
   ![image-20210607173010850](images\image-20210607173010850.png)
 
-### 03 Nginx常用模块
+# 3 Nginx常用模块
 
-#### 3.1 Nginx目录索引
+## 3.1 Nginx目录索引
 
 当ngx_http_index_module模块找不到索引文件时，通常会将请求传递给ngx_http_autoindex_module模块
 
 ngx_http_autoindex_module模块处理以斜杠字符结尾的请求，并生成目录列表
 
-##### 3.1.1 ngx_http_autoindex_module场景示例：
+### 3.1.1 ngx_http_autoindex_module场景示例：
 
 模拟搭建企业内部yum仓库
 
@@ -92,11 +90,11 @@ server {
 }
 ```
 
-#### 3.2 Nginx访问控制
+## 3.2 Nginx访问控制
 
 ngx_http_access_module模块允许限制对某些客户端地址的访问
 
-##### 3.2.1 ngx_http_access_module场景示例：
+### 3.2.1 ngx_http_access_module场景示例：
 
 只允许指定的来源IP访问/centos，其他网段拒绝
 
@@ -123,7 +121,7 @@ server {
 
 ngx_http_auth_basic_module模块允许使用http基本身份验证，验证用户名和密码来限制对资源的访问
 
-##### 3.2.2 ngx_http_auth_basic_module场景示例
+### 3.2.2 ngx_http_auth_basic_module场景示例
 
 基于用户名和密码认证实践
 
@@ -147,9 +145,9 @@ server {
 }
 ```
 
-#### 3.3 Nginx限流限速
+## 3.3 Nginx限流限速
 
-##### 3.3.1 场景一：综合案例
+### 3.3.1 场景一：综合案例
 
 限制web服务器请求数处理为1秒一个，触发值为5，限制用户尽可同时下载一个文件。当下载超过100M则现在下载速度为500k。如果同时下载超过2个视频，则返回提示“请进行会员充值”
 
@@ -189,7 +187,7 @@ server {
 }
 ```
 
-#### 3.4 Nginx状态监控
+## 3.4 Nginx状态监控
 
 ngx_http_stub_status_module模块提供对基本状态信息的访问
 
@@ -218,9 +216,9 @@ server {
 | Writing            | 当前响应的请求头数量                  |
 | Waiting            | 当前等待请求的空闲客户端连接数        |
 
-#### 3.5 Nginx Location
+## 3.5 Nginx Location
 
-##### 3.5.1 Location语法
+### 3.5.1 Location语法
 
 ```
 location [ = | ~ | ~* |^~ ] uri { ... }
@@ -235,17 +233,17 @@ location @name { ... }
 | ~*     | 不区分大小写的正则匹配       | 4      |
 | /      | 通用匹配，任何请求都会匹配到 | 5      |
 
-### 04 Nginx搭建流行架构
+# 4 Nginx搭建流行架构
 
-#### 4.1 LNMP架构基本概述
+## 4.1 LNMP架构基本概述
 
-##### 4.1.1 LNMP实现过程
+### 4.1.1 LNMP实现过程
 
 ![image-20210608191607848](images/image-20210608191607848.png)
 
- #### 4.2 LNMP架构环境配置
+ ## 4.2 LNMP架构环境配置
 
-##### 4.2.1 图形展示fastcgi_index与fastcgi_param作用
+### 4.2.1 图形展示fastcgi_index与fastcgi_param作用
 
 ![image-20210608192010564](images/image-20210608192010564.png)
 
@@ -268,7 +266,7 @@ server {
 }
 ```
 
-### 05 Nginx反向代理服务
+# 5 Nginx反向代理服务
 
 正向代理与反向代理区别：
 
@@ -278,7 +276,7 @@ server {
 
 反向代理代理的对象是服务端，为服务端服务
 
-#### 5.1 Nginx代理服务支持协议
+## 5.1 Nginx代理服务支持协议
 
 1、Nginx作为代理服务，支持的代理协议非常的多，具体如下图
 
@@ -288,7 +286,7 @@ server {
 
 ![image-20210608194107649](images/image-20210608194107649.png)
 
-#### 5.2 Nginx代理网站优化配置项
+## 5.2 Nginx代理网站优化配置项
 
 ```
 vim /etc/nginx/proxy_params
@@ -309,19 +307,19 @@ location / {
 }
 ```
 
-### 06 Nginx七层负载均衡
+# 6 Nginx七层负载均衡
 
-#### 6.1 Nginx负载均衡基本概述
+## 6.1 Nginx负载均衡基本概述
 
-##### 6.1.1 负载均衡与代理区别
+### 6.1.1 负载均衡与代理区别
 
 * Nginx负载均衡与Nginx反向代理不同地方在于：
   * Nginx代理仅代理一台服务器
   * Nginx负载均衡则是将客户端请求通过proxy_pass代理至一组upstream资源池
 
-#### 6.2 Nginx负载均衡应用场景
+## 6.2 Nginx负载均衡应用场景
 
-##### 6.2.1 四层与七层区别
+### 6.2.1 四层与七层区别
 
 * 四层负载均衡：传输层
   * 优点：性能高，数据包在底层就进行了转发
@@ -330,7 +328,7 @@ location / {
   * 优点：贴近业务，支持URI路径匹配、Header改写、Rewrite等
   * 缺点：性能低，数据包需要拆解到顶层才进行转发
 
-#### 6.3 Nginx负载均衡配置场景
+## 6.3 Nginx负载均衡配置场景
 
 * Nginx实现负载均衡需要两个模块：
   * proxy_pass：代理模块
@@ -352,7 +350,7 @@ server {
 }
 ```
 
-#### 6.4 Nginx负载均衡调度算法
+## 6.4 Nginx负载均衡调度算法
 
 | 调度算法   | 概述                                                         |
 | ---------- | ------------------------------------------------------------ |
