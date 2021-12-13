@@ -1,8 +1,10 @@
 # 高可用集群搭建
 
-## 辅助环境
+## 命令方式
 
-### **docker安装**
+### 辅助环境
+
+#### **docker安装**
 
 ```shell
 编辑软件安装脚本docker_insta11.sh
@@ -20,7 +22,7 @@ apt-get update
 #安装软件
 apt-get install docker-ce docker-ce-cli containerd.io -y
 
-#加速器配置
+#加速器配置（k8s node节点中无需此配置）
 echo '{"registry-mirrors": ["https://5sdlkupt.mirror.aliyuncs.com"],"insecure-registries": ["10.0.0.19:80"]}' > /etc/docker/daemon.json
 #重启服务
 systemctl restart docker
@@ -39,7 +41,7 @@ systemctl daemon-reload
 systemctl restart docker
 ```
 
-### **harbor部署**
+**harbor部署**
 
 ```shell
 安装docker-compose
@@ -93,7 +95,7 @@ systemctl daemon-reload
 systemctl enable harbor
 ```
 
-### **swap禁用、网络转发**
+#### **swap禁用、网络转发**
 
 ```shell
 # 脚本方式
@@ -117,7 +119,7 @@ modprobe overlay
 sysctl -p /etc/sysctl.d/k8s.conf
 ```
 
-### **主机名解析配置**
+#### **主机名解析配置**
 
 ```
 # 编辑/etc/hosts 文件
@@ -131,7 +133,7 @@ sysctl -p /etc/sysctl.d/k8s.conf
 10.0.0.19 register.micah.com register
 ```
 
-### 高可用软件安装
+#### 高可用软件安装
 
 安装软件
 
@@ -241,7 +243,7 @@ if [ ${haproxy_status} -eq 0 ];then
 fi
 ```
 
-### **kubeadm配置**
+#### **kubeadm配置**
 
 kubeadm软件源的配置
 
@@ -258,7 +260,7 @@ apt-get update
 apt-cache madison kubeadm
 ```
 
-### 命令补全
+#### 命令补全
 
 将相关环境配置放到当前用户的环境文件中
 
@@ -266,9 +268,9 @@ apt-cache madison kubeadm
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 ```
 
-## 集群安装
+### 集群安装
 
-### master部署
+#### master部署
 
 安装软件
 
@@ -277,9 +279,9 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc
 apt-get install kubelet=1.22.1-00 kubeadm=1.22.1-00 kubectl=1.22.1-00 -y
 
 注意：
-	kubeadm 主要是对k8s集群来进行管理的，在master角色主机上安装
-	kubelet 是已服务的方式来进行启动，主要用于收集节点主机的信息
-	kubectl 主要是对集群中的资源对象进行管控，一般情况下，node角色是不需要安装的
+	kubeadm 将node节点加载到master集群中的命令
+	kubelet 用于采集当前节点信息，推送给master的服务
+	kubectl 用于管理k8s集群的管理命令，在node节点上不用，一般不安装
 ```
 
 **master1节点集群初始化**
@@ -310,7 +312,7 @@ wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-
 kubectl apply -f kube-flannel.yml
 ````
 
-### 添加master节点
+#### 添加master节点
 
 **软件安装**
 
@@ -336,4 +338,22 @@ kubeadm join 10.0.0.200:6443 --token h0jk4r.ncjymstn1qfi9isy --discovery-token-c
 kubeadm reset
 rm -rf /etc/kubernetes
 ```
+
+#### 添加node节点
+
+安装软件
+
+```
+# 安装kubelet、kubeadm
+apt-get install kubelet=1.22.1-00 kubeadm=1.22.1-00 -y
+```
+
+添加节点
+
+```
+# node docker无需配置镜像仓库地址，默认从master同步组件镜像
+kubeadm join 10.0.0.200:6443 --token h0jk4r.ncjymstn1qfi9isy --discovery-token-ca-cert-hash sha256:9f1d372e68aad7a3599e43a9221232fe380ebe0e0532afe8640f4382f29353bf
+```
+
+## 配置文件方式
 
