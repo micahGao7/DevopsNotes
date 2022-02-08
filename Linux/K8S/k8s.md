@@ -7,7 +7,7 @@
 #### **docker安装**
 
 ```shell
-编辑软件安装脚本docker_insta11.sh
+编辑软件安装脚本docker_install.sh
 #!/bin/bash
 # 安装Docker环境
 # 安装依赖环境

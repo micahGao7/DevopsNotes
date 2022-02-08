@@ -22,9 +22,13 @@
 
 ```python
 import csv
+rows = [(id, name, age, desc),
+       [1, tom, 8, "cat"],
+       (2, jerry, 7 "mouse")
+       ]
 with open('t.csv', 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(rows[0])
-    writer.writerow(rows[1:])
+    writer.writerows(rows[1:])
 ```
 

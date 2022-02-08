@@ -85,7 +85,7 @@ server {
 	location /repo {
 		autoindex	on;		#启用目录列表输出
 		autoindex_exact_size	off;	#是否在目录列表中输出确切的文件大小，on显示字节，off显示大概单位
-		autoindex_locatime	on;		#是否显示本地时间，on本地时区，off UTC时间
+		autoindex_localtime	on;		#是否显示本地时间，on本地时区，off UTC时间
 	}
 }
 ```
@@ -105,7 +105,7 @@ server {
 	charset	utf-8;
 	autoindex	on;		#启用目录列表输出
 	autoindex_exact_size	off;	#是否在目录列表中输出确切的文件大小，on显示字节，off显示大概单位
-	autoindex_locatime	on;
+	autoindex_localtime	on;
 	
 	location / {
 		index index.html;
