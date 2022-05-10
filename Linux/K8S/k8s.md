@@ -357,3 +357,41 @@ kubeadm join 10.0.0.200:6443 --token h0jk4r.ncjymstn1qfi9isy --discovery-token-c
 
 ## 配置文件方式
 
+## 集群管理
+
+### kubeadm更新命令
+
+```
+master节点更新
+	查看软件版本
+	apt-cache madison kubelet | kubeadm | kubectl
+	apt install kubelet=版本号	kueadm=版本号 kubectl=版本号
+	
+	查看更新条件
+	kubeadm upgrade plan
+	
+	更新kubeadm软件
+	kubeadm upgrade apply 版本号
+
+node节点更新
+	apt install kubelet=版本号	kueadm=版本号
+	
+	升级node节点
+	kubeadm upgrade node
+```
+
+#### 简单实践
+
+node节点更新
+
+```
+查看现状
+	kubectl get pods -o wide
+	
+将node节点资源清理出去
+	标记节点为不可调度
+	kubectl cordon node2
+	驱逐当前节点上的资源
+	kubectl drain node2 --delete-emptyd-data
+```
+
