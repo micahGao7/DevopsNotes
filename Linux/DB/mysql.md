@@ -88,6 +88,7 @@ select emp_no as id, concat(first_name, ' ', last_name) as name from employees a
 
 注意：如果很多表达式需要使用AND、OR计算逻辑表达式的值的时候，由于有结合律的问题，建议使用小括号来避免产生错误
 
+<<<<<<< HEAD
 ```sql
 -- 条件查询
 select * from tbl_name where id in (1001, 1002, 1003);
@@ -206,3 +207,5 @@ select * from manager where manager_no is not null;
 -- 所有有领导的员工及其领导的名字
 select worker.emp_no, worker.name, mgr.name as leaderName from manager as worker join manager as mgr on worker.manager_no = mgr.emp_no
 ```
+=======
+>>>>>>> 93fe25d4fcc41ad7e044b70f5b6dff91a301707c
